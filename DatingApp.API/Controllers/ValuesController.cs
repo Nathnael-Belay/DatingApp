@@ -12,11 +12,12 @@ namespace DatingApp.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    [Route("api/[controller]")]
+    public class ValuesController : ControllerBase
     {
         private readonly DataContext _context;
-        public WeatherForecastController(DataContext context)
+        // WeatherForecast
+        public ValuesController(DataContext context)
         {
             _context = context;
 
@@ -26,18 +27,18 @@ namespace DatingApp.API.Controllers
         //     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         // };
 
-        // private readonly ILogger<WeatherForecastController> _logger;
+        // private readonly ILogger<ValuesController> _logger;
 
-        // public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        // public ValuesController(ILogger<ValuesController> logger)
         // {
         //     _logger = logger;
         // }
 
         // [HttpGet]
-        // public IEnumerable<WeatherForecast> Get()
+        // public IEnumerable<Values> Get()
         // {
         //     var rng = new Random();
-        //     return Enumerable.Range(1, 6).Select(index => new WeatherForecast
+        //     return Enumerable.Range(1, 6).Select(index => new Values
         //     {
         //         Date = DateTime.Now.AddDays(index),
         //         TemperatureC = rng.Next(-20, 55),
