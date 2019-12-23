@@ -21,10 +21,10 @@ namespace DatingApp.API.Controllers
             _context = context;
 
         }
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        // private static readonly string[] Summaries = new[]
+        // {
+        //     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        // };
 
         // private readonly ILogger<WeatherForecastController> _logger;
 
@@ -45,6 +45,8 @@ namespace DatingApp.API.Controllers
         //     })
         //     .ToArray();
         // }
+        [AllowAnonymous]
+        [HttpGet]
         public async Task<IActionResult> GetValues() {
             var values = await _context.Values.ToListAsync();
             return Ok(values);
