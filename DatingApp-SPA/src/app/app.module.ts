@@ -34,6 +34,7 @@ import { TimeAgoPipe } from 'time-ago-pipe';
 import { ListsResolver } from './_resolvers/lists.resolver';
 import { MessagesResolver } from './_resolvers/messages.resolver';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { TimeAgo } from './TimeAgo';
 
 
 export function tokenGetter() {
@@ -54,6 +55,7 @@ export function tokenGetter() {
       MemberEditComponent,
       PhotoEditorComponent,
       TimeAgoPipe,
+      TimeAgo,
       MemberMessagesComponent
    ],
    imports: [

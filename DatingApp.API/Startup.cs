@@ -36,6 +36,33 @@ namespace DatingApp.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DataContext>(x => x.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddControllers().AddNewtonsoftJson(opt => {
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+            services.AddCors();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.AddAutoMapper(typeof(Startup));
+            services.AddTransient<Seed>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IDatingRepository, DatingRepository>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
+                            .GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                            ValidateIssuer = false,
+                            ValidateAudience = false
+                    };
+                });
+                services.AddScoped<LogUserActivity>();
+        }
+
+        // Configuration to be used in Development Mode
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers().AddNewtonsoftJson(opt => {
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -84,7 +111,7 @@ namespace DatingApp.API
             }
 
             // app.UseHttpsRedirection();
-            // seeder.SeedUsers();
+            seeder.SeedUsers();
 
             // app.UseEndpoints(endpoints => {
             //     endpoints.MapDefaultControllerRoute();
@@ -94,16 +121,33 @@ namespace DatingApp.API
 
             app.UseAuthentication();
 
-            app.UseRouting();
+            app.UseRouting(
+            //     routes => {
+            //     routes.MapSpaFallbackRoutes(
+            //         name: "spa-fallback",
+            //         defaults: new { controller = "Fallback", action = "Index"}
+            //     );
+            // }
+            );
 
             app.UseAuthorization();
 
-            // app.UseMvc();
+            app.UseDefaultFiles();
+
+            app.UseStaticFiles();
+
+            // app.UseMvc(routes => {
+            //     routes.MapSpaFallbackRoutes(
+            //         name: "spa-fallback",
+            //         defaults: new { controller = "Fallback", action = "Index"}
+            //     );
+            // });
 
             app.UseEndpoints(endpoints =>
             {
                 // endpoints.MapControllers();
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
